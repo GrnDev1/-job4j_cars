@@ -13,12 +13,12 @@ public class UserUsage {
         try (SessionFactory sf = new MetadataSources(registry)
                 .buildMetadata().buildSessionFactory()) {
             CrudRepository crudRepository = new CrudRepository(sf);
-            var userRepository = new UserRepository(crudRepository);
+            var userRepository = new HqlUserRepository(crudRepository);
             var user = new User();
             user.setLogin("admin");
             user.setPassword("admin");
             userRepository.create(user);
-            userRepository.findAllOrderById()
+            userRepository.findAll()
                     .forEach(System.out::println);
             userRepository.findByLikeLogin("e")
                     .forEach(System.out::println);
@@ -31,7 +31,7 @@ public class UserUsage {
             userRepository.findById(user.getId())
                     .ifPresent(System.out::println);
             userRepository.delete(user.getId());
-            userRepository.findAllOrderById()
+            userRepository.findAll()
                     .forEach(System.out::println);
         } finally {
             StandardServiceRegistryBuilder.destroy(registry);
