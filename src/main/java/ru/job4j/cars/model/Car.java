@@ -30,4 +30,7 @@ public class Car {
             inverseJoinColumns = {@JoinColumn(name = "owner_id")}
     )
     private Set<Owner> owners = new HashSet<>();
+
+    @OneToMany(mappedBy = "car")
+    private Set<History> histories;
 }
