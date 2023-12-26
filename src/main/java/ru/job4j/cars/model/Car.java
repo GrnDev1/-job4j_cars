@@ -32,5 +32,5 @@ public class Car {
     private Set<Owner> owners = new HashSet<>();
 
     @OneToMany(mappedBy = "car")
-    private Set<History> histories;
+    private Set<History> histories = new HashSet<>();
 }

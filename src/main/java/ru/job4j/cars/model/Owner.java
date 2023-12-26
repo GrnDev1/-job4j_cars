@@ -4,6 +4,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -22,5 +23,5 @@ public class Owner {
     private User user;
 
     @OneToMany(mappedBy = "owner")
-    private Set<History> histories;
+    private Set<History> histories = new HashSet<>();
 }
