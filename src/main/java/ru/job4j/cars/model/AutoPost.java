@@ -5,7 +5,6 @@ import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,7 +18,7 @@ public class AutoPost {
     @EqualsAndHashCode.Include
     private int id;
     private String description;
-    private LocalDateTime created = LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES);
+    private LocalDateTime created;
     @ManyToOne
     @JoinColumn(name = "auto_user_id")
     private User user;
@@ -39,4 +38,8 @@ public class AutoPost {
     @ManyToOne
     @JoinColumn(name = "car_id")
     private Car car;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "file_id")
+    private File file;
 }
