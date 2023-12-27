@@ -16,5 +16,4 @@
     <include file="scripts/011_ddl_create_brands_table.sql" relativeToChangelogFile="true"/>
     <include file="scripts/012_ddl_add_brand_id_in_cars_table.sql" relativeToChangelogFile="true"/>
     <include file="scripts/013_ddl_create_files_table.sql" relativeToChangelogFile="true"/>
-    <include file="scripts/014_ddl_add_file_id_in_auto_post_table.sql" relativeToChangelogFile="true"/>
 </databaseChangeLog>

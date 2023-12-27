@@ -7,14 +7,12 @@ import org.springframework.stereotype.Repository;
 import ru.job4j.cars.model.AutoPost;
 import ru.job4j.cars.model.Brand;
 import ru.job4j.cars.model.Car;
-import ru.job4j.cars.model.File;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Root;
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -71,7 +69,7 @@ public class HqlPostRepository implements PostRepository {
 
     @Override
     public List<AutoPost> findAllForLastDay() {
-        LocalDateTime time = LocalDateTime.now().truncatedTo(ChronoUnit.DAYS);
+        LocalDateTime time = LocalDateTime.now().minusDays(1);
         return crudRepository.query(
                 "from AutoPost WHERE created > :time", AutoPost.class,
                 Map.of("time", time)
@@ -84,8 +82,9 @@ public class HqlPostRepository implements PostRepository {
             CriteriaBuilder builder = session.getCriteriaBuilder();
             CriteriaQuery<AutoPost> criteria = builder.createQuery(AutoPost.class);
             Root<AutoPost> postRoot = criteria.from(AutoPost.class);
-            Join<AutoPost, File> fileJoin = postRoot.join("file");
-            criteria.select(postRoot).where(builder.isNotNull(fileJoin.get("file")));
+            criteria.select(postRoot).where(
+                    builder.greaterThan(builder.size(postRoot.get("photos")), 0)
+            );
             return session.createQuery(criteria).getResultList();
         };
         return crudRepository.tx(command);

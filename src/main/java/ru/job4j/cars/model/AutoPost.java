@@ -6,7 +6,9 @@ import lombok.EqualsAndHashCode;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
@@ -39,7 +41,7 @@ public class AutoPost {
     @JoinColumn(name = "car_id")
     private Car car;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "file_id")
-    private File file;
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "post_id")
+    private Set<File> photos = new HashSet<>();
 }
