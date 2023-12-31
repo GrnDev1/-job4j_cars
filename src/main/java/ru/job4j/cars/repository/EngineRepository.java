@@ -7,7 +7,11 @@ import java.util.Optional;
 
 public interface EngineRepository {
 
+    Engine save(Engine engine);
+
     List<Engine> findAll();
 
     Optional<Engine> findById(int id);
+
+    boolean deleteById(int id);
 }

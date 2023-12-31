@@ -51,7 +51,7 @@ public class HqlCarRepository implements CarRepository {
     @Override
     public Optional<Car> findById(int id) {
         return crudRepository.optional(
-                "from Car WHERE id = :fId", Car.class,
+                "from Car f LEFT JOIN FETCH f.owners WHERE f.id = :fId", Car.class,
                 Map.of("fId", id)
         );
     }

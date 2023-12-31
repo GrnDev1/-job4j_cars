@@ -6,11 +6,9 @@ import org.hibernate.Session;
 import org.springframework.stereotype.Repository;
 import ru.job4j.cars.model.AutoPost;
 import ru.job4j.cars.model.Brand;
-import ru.job4j.cars.model.Car;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Root;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -96,8 +94,7 @@ public class HqlPostRepository implements PostRepository {
             CriteriaBuilder builder = session.getCriteriaBuilder();
             CriteriaQuery<AutoPost> criteria = builder.createQuery(AutoPost.class);
             Root<AutoPost> postRoot = criteria.from(AutoPost.class);
-            Join<AutoPost, Car> carJoin = postRoot.join("car");
-            criteria.select(postRoot).where(builder.equal(carJoin.get("car").get("brand"), brand));
+            criteria.select(postRoot).where(builder.equal(postRoot.get("car").get("brand"), brand));
             return session.createQuery(criteria).getResultList();
         };
         return crudRepository.tx(command);

@@ -2,11 +2,13 @@ package ru.job4j.cars.repository;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.Session;
 import ru.job4j.cars.model.User;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Function;
 
 @AllArgsConstructor
 @Slf4j
@@ -26,16 +28,23 @@ public class HqlUserRepository implements UserRepository {
     }
 
     @Override
-    public void update(User user) {
-        crudRepository.run(session -> session.merge(user));
+    public boolean update(User user) {
+        try {
+            crudRepository.run(session -> session.update(user));
+            return true;
+        } catch (Exception e) {
+            log.error("User with this id is not found", e);
+        }
+        return false;
     }
 
     @Override
-    public void delete(int userId) {
-        crudRepository.run(
-                "delete from User where id = :fId",
-                Map.of("fId", userId)
-        );
+    public boolean delete(int userId) {
+        Function<Session, Boolean> command = session ->
+                session.createQuery("DELETE User WHERE id = :fId")
+                        .setParameter("fId", userId)
+                        .executeUpdate() != 0;
+        return crudRepository.tx(command);
     }
 
     @Override

@@ -8,9 +8,9 @@ import java.util.Optional;
 public interface UserRepository {
     Optional<User> create(User user);
 
-    void update(User user);
+    boolean update(User user);
 
-    void delete(int userId);
+    boolean delete(int userId);
 
     List<User> findAll();
 

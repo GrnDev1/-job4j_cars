@@ -1,9 +1,10 @@
 package ru.job4j.cars.repository;
 
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.hibernate.Session;
 import org.springframework.stereotype.Repository;
-import ru.job4j.cars.model.File;
+import ru.job4j.cars.model.Brand;
 
 import java.util.List;
 import java.util.Map;
@@ -12,21 +13,25 @@ import java.util.function.Function;
 
 @Repository
 @AllArgsConstructor
-public class HqlFileRepository implements FileRepository {
+@Slf4j
+public class HqlBrandRepository implements BrandRepository {
     private final CrudRepository crudRepository;
 
     @Override
-    public File save(File file) {
-        crudRepository.run(session -> {
-            session.persist(file);
-        });
-        return file;
+    public Brand save(Brand brand) {
+        crudRepository.run(session -> session.persist(brand));
+        return brand;
     }
 
     @Override
-    public Optional<File> findById(int id) {
+    public List<Brand> findAll() {
+        return crudRepository.query("FROM Brand ORDER BY id", Brand.class);
+    }
+
+    @Override
+    public Optional<Brand> findById(int id) {
         return crudRepository.optional(
-                "from File WHERE id = :fId", File.class,
+                "from Brand WHERE id = :fId", Brand.class,
                 Map.of("fId", id)
         );
     }
@@ -34,14 +39,9 @@ public class HqlFileRepository implements FileRepository {
     @Override
     public boolean deleteById(int id) {
         Function<Session, Boolean> command = session ->
-                session.createQuery("DELETE File WHERE id = :fId")
+                session.createQuery("DELETE Brand WHERE id = :fId")
                         .setParameter("fId", id)
                         .executeUpdate() != 0;
         return crudRepository.tx(command);
-    }
-
-    @Override
-    public List<File> findAll() {
-        return crudRepository.query("FROM File ORDER BY id", File.class);
     }
 }
